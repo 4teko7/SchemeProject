@@ -1,0 +1,18 @@
+#lang scheme
+; Bilal Tekin-2017400264
+
+;You can replace #f's with your function definitions and define more helper functions as you need to use this template.
+
+; Solver function
+(define TENTS-SOLUTION #f)
+
+(define REPLACE-NTH #f)
+
+; Helper functions
+(define RETURN-FIRST-NOT-FALSE #f)
+
+(define ADJACENT #f)
+
+(define ADJACENT-WITH-LIST #f )
+
+(define NEIGHBOR-LIST #f)

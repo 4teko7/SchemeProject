@@ -1,0 +1,177 @@
+#lang racket
+(define (square x) (* x x)) ;defininin a function  - (* (square 10) (square 10))
+(define (abs x)
+  (
+     if(< x 0) (- x)
+       x
+  )
+
+  )
+
+(length (list 1 2 3 5)) ; length of list
+
+;(sort (list 1 2 3)) ; there is an error
+
+(define myList (list 1 2 3 4)) ;Define a List
+(define myList2 '(1 2 3 4 5)) ;Define a List
+
+(define (firstElement x) (car x)) ; First element of list
+(define (ElementsOtherThanFirstElement x) (cdr x)) ; Elements Other Than First Element
+(define (secondElementOfList x) (cadr x)) ; Second Element Of List
+(define (thirdElementOfList x) (caddr x)) ; Third Element Of List
+(define (forthElementOfList x) (cadddr x)) ; Forth Element Of List
+
+(define (sumOfList x)  ; Sum Of List Elements
+  (
+   if (= 1 (length x)) (car x)
+      (+ (car x) (sumOfList (cdr x) ))
+   )
+
+  )
+
+
+(define (swapSecondAndThird x) ; Swap second and third element
+  (list (car x) (caddr x) (cadr x))
+  )
+
+
+;(define fourOverTwo (list '/ 4 2)) ; fourOverTwo will be equal to '/4 2
+
+;(eval fourOverTwo) ; Will give us the result of fourOverTwo
+
+(define (sortList x) ; Sort a list with increasing order
+  (sort x <)
+  )
+
+(define (sortListReverseOrder x) ; Sort a list with decreasing order
+  (sort x >)
+  )
+
+(define (sortString x) ; Sort String with increasing order
+  (sort x string<?)
+  )
+
+(define (applyTwice fn x) ;Can take a function and a number
+  (fn (fn x))
+  )
+
+;(define (square x)
+;  (* x x)
+;  )
+
+(define (double x) ; Double the number
+  (* x 2)
+  )
+(define (quadruple x) ; Call applyTwice and send it double function and x
+  (applyTwice double x)
+  )
+(define (pow4 x) ;Call applyTwice and send it square function and x
+  (applyTwice square x)
+  )
+
+
+(define (makePair x y); (1 . 2) Make numbers Pair you can use car to get first element , in the same way cdr.
+  (cons x y) ; (cons 1 null) will give (1)
+  ) 
+(define (makeNestedPair x y z);((1 . 2) . 3)
+  (cons (cons x y) z)
+  )
+
+(define myListWithCons (cons (cons (cons 1 null) 2) 3)) ; '(((1) . 2) . 3) add the list to the number
+(define myListWithCons2 (cons 1 (cons 2 (cons 3 null)))) ; '(1 2 3) Add the number to the list
+
+
+(define (isListsEqual x y) (equal? x y)) ; Check equality
+
+
+(define (getElementInTheList x y) ; Get Elemet which is at index y in the list  
+  (list-ref x y)
+  )
+
+(define (getElementOfSpecificIndex lst x) ; Get the nth element of the list, x can not be negative and larger than list length
+
+  (if (> (+ 1 x) (length lst)) (car '(null))
+      (if (< x 0) (car '(null))
+          (
+           if (zero? x) (car lst)
+              (getElementOfSpecificIndex (cdr lst) (- x 1))
+              )
+
+          )
+  
+  )
+  )
+
+
+(define (applyFunction x) ; This map function gets all elements inside the myList and sends them to double function              
+  (map double x); all elements double and result is inserted to a list.
+  )
+
+
+(define (myMap fnc lst) ; My Manuel Map Function
+  (if(null? lst) null
+     (cons (fnc (car lst)) (myMap fnc (cdr lst)) )
+   )
+ )
+
+(define (utilFunction x n lst) ; fron n, apply x over all elements in the list , ex : x = +, n = 0, lst = '(1 2 3 4)  == 10
+  (foldr x n lst)
+  )
+
+
+(define (myUtilFunction x n lst) ; my Manuel Util Function
+  (if (null? lst) n
+      (x (car lst) (myUtilFunction x n (cdr lst)) )
+   )
+ )
+
+
+
+(define (sumOfSquares x y) ; Take square of them and return the sum
+  (define (square x) (* x x))
+  (define (sum x y) (+ x y))
+  (sum (square x) (square y))
+ )
+
+
+
+(define (ifNotEqualPrintError x y) ; If not equal Display Error Messages
+  (define (printError)
+   (display x)
+   (display " is not equal to ")
+   (display y)
+   (newline)
+    )
+  (
+   if (not (equal? x y)) (printError) null
+     ) 
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
