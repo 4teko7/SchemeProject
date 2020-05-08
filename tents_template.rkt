@@ -3,7 +3,7 @@
 
 ;You can replace #f's with your function definitions and define more helper functions as you need to use this template.
 
-
+(require racket/trace)
 
 
 
@@ -66,11 +66,42 @@
 
 
 ; My Replace number in the list With N according to position
-(define (myReplaceWithNFunction list position number)
-    (cond [(= position 1) (cons number (cdr list))] 
-          [else (cons (car list) (myReplaceWithNFunction (cdr list) (- position 1) number ))])
+(define (myReplaceWithNFunction lst position number)
+    (cond [(= position 1) (cons number (cdr lst))] 
+          [else (cons (car lst) (myReplaceWithNFunction (cdr lst) (- position 1) number ))])
 
  )
+
+; Remove an element from a list ; (removeElementFromList '((1 2) (2 3)) '(2 3)) ; (removeElementFromList '(1 2 3) 1)
+(define (removeElementFromList lst element)
+  ( if (null? lst) lst
+    (cond [(equal? (car lst) element)(cdr lst)] 
+          [else (cons (car lst) (removeElementFromList (cdr lst) element ))])
+   )
+
+ )
+
+
+; Create Table With x = row , y = row , lstSize = Table Size AxA, lst is the list Of Indices
+(define (createTable x y lstSize lst)  
+   (  
+    if (and (equal? x 1) (equal? y 1)) (cons (cons x (cons y null)) lst)
+       (
+        
+        if(equal? x 1) (cons (cons x (cons y null)) (createTable lstSize (- y 1) lstSize lst))
+          (cons (cons x (cons y null)) (createTable (- x 1) y lstSize lst)) 
+         )
+    ) 
+ ) 
+
+
+
+
+
+
+;(define table '((1 2) (2 3) (3 4)))
+
+;(define lastList (removeElementFromList table '(2 3)))
 
 
 ; Helper functions
