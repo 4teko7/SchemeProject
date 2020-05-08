@@ -8,8 +8,7 @@
 
 
 
-; Solver function
-(define TENTS-SOLUTION #f)
+
 
 
 
@@ -92,11 +91,49 @@
           (cons (cons x (cons y null)) (createTable (- x 1) y lstSize lst)) 
          )
     ) 
- ) 
+ )
+
+(define (isElementInTheList x lst)
+  (
+   if(null? lst) #f
+     (
+      if(equal? x (car lst)) #t
+      (isElementInTheList x (cdr lst))
+      )
+   )
+
+
+ )
 
 
 
+; Remove Unnecessary Cells in the Table
+(define (removeUnnecessaryCells x lst filteredList)
+  
+  (
+   
+   if (null? x) x
+  (
+   ;((removeUnnecessaryCells   (cdr x)   lst filteredList))
+   if (isElementInTheList (car x) lst)  (removeUnnecessaryCells   (cdr x)   lst filteredList) ; (removeElementFromList x (car x) )) ;
+   (cons (car x) (removeUnnecessaryCells (cdr x) lst filteredList) )
+      
+   )
+  
+ )
+  
+  )
+(trace removeUnnecessaryCells)
 
+; My Solver
+(define (mySolution parameters)
+  (define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
+  (display myTable)
+  (removeUnnecessaryCells myTable (caddr parameters))
+ )
+
+; Solver function
+(define TENTS-SOLUTION mySolution)
 
 
 ;(define table '((1 2) (2 3) (3 4)))
