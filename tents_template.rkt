@@ -115,7 +115,7 @@
    if (null? x) x
   (
    ;((removeUnnecessaryCells   (cdr x)   lst filteredList))
-   if (isElementInTheList (car x) lst)  (removeUnnecessaryCells   (cdr x)   lst filteredList) ; (removeElementFromList x (car x) )) ;
+   if (or (not (myAdjacentWithListFunction (car x) lst) ) (isElementInTheList (car x) lst))  (removeUnnecessaryCells   (cdr x)   lst filteredList) ; (removeElementFromList x (car x) )) ;
    (cons (car x) (removeUnnecessaryCells (cdr x) lst filteredList) )
       
    )
@@ -123,14 +123,21 @@
  )
   
   )
-(trace removeUnnecessaryCells)
+;(trace removeUnnecessaryCells)
 
 ; My Solver
 (define (mySolution parameters)
   (define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
+  (define onlyRequiredCells (removeUnnecessaryCells myTable (caddr parameters) '()))
+
+  
+  (newline)
   (display myTable)
-  (removeUnnecessaryCells myTable (caddr parameters))
- )
+  (newline)(newline)
+  (display onlyRequiredCells)
+  (newline)
+  
+ ) 
 
 ; Solver function
 (define TENTS-SOLUTION mySolution)
