@@ -131,26 +131,42 @@
 
 
 ; '((1 1) (2 2)) + '(((1 1) (1 1)) ((2 2) (1 1)) ((1 1) (2 2)) ((2 2) (2 2))) = > List which has every sublist length of 3
-(define (createTableNested x y mylst1 mylst2 absoluteList lstSize lst)  
+(define (createTableNested mylst1 mylst2 absoluteList lst)
+  (define x (length mylst1))
+  (define y (length mylst2))
    (  
-    if (and (equal? x 1) (equal? y 1)) (cons (cons (car mylst1) (car mylst2)) lst)
-       (
+       cond [(and (equal? x 1) (equal? y 1) (not (member (car mylst1) (car mylst2)))) (cons (cons (car mylst1) (car mylst2)) lst)]
+            [(and (equal? x 1) (equal? y 1) ) null]
+
+            [else (
         
-        if(equal? x 1) (cons (cons (car mylst1) (car mylst2)) (createTableNested lstSize (- y 1) absoluteList (cdr mylst2) absoluteList lstSize lst))
-          (cons (cons (car mylst1) (car mylst2)) (createTableNested (- x 1) y (cdr mylst1) mylst2 absoluteList lstSize lst)) 
-         )
+        cond [(and (equal? x 1) (not (member (car mylst1) (car mylst2))))  (cons (cons (car mylst1) (car mylst2)) (createTableNested absoluteList (cdr mylst2) absoluteList lst))]
+             [(equal? x 1) (createTableNested absoluteList (cdr mylst2) absoluteList lst)]
+             [(not (member (car mylst1) (car mylst2))) (cons (cons (car mylst1) (car mylst2)) (createTableNested (cdr mylst1) mylst2 absoluteList lst))]
+             [else  (createTableNested (cdr mylst1) mylst2 absoluteList lst)]
+
+             
+         )]
+            
     ) 
  )
+
+
 ;'((1 1) (2 2)) + '((1 1) (2 2)) = > '(((1 1) (1 1)) ((2 2) (1 1)) ((1 1) (2 2)) ((2 2) (2 2)))
 ; Create Table With x = row , y = row , lstSize = Table Size AxA, lst is the list Of Indices
-(define (createTableOfList x y mylst1 mylst2 absoluteList lstSize lst)  
+(define (createTableOfList mylst1 mylst2 absoluteList lst)
+  (define x (length mylst1))
+  (define y (length mylst2))
    (  
-    if (and (equal? x 1) (equal? y 1)) (cons (cons (car mylst1) (cons (car mylst2) null)) lst)
-       (
+       cond [(and (equal? x 1) (equal? y 1) (not (equal? (car mylst1) (car mylst2)))) (cons (cons (car mylst1) (cons (car mylst2) null)) lst)]
+            [(and (equal? x 1) (equal? y 1) ) null]
+       [else (
         
-        if(equal? x 1) (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList lstSize (- y 1) absoluteList (cdr mylst2) absoluteList lstSize lst))
-          (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList (- x 1) y (cdr mylst1) mylst2 absoluteList lstSize lst)) 
-         )
+        cond [(and (equal? x 1) (not (equal? (car mylst1) (car mylst2))))  (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList absoluteList (cdr mylst2) absoluteList lst))]
+             [(equal? x 1) (createTableOfList absoluteList (cdr mylst2) absoluteList lst)]
+             [(not (equal? (car mylst1) (car mylst2))) (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList (cdr mylst1) mylst2 absoluteList lst))]
+             [else  (createTableOfList (cdr mylst1) mylst2 absoluteList lst)]
+         )]
     ) 
  )
 
@@ -158,15 +174,15 @@
 ;(nestedList 2 '((1 1) (2 2)) '((1 1) (2 2)) 2)
 ;'(((1 1) (1 1) (1 1)) ((2 2) (1 1) (1 1)) ((1 1) (2 2) (1 1)) ((2 2) (2 2) (1 1)) ((1 1) (1 1) (2 2)) ((2 2) (1 1) (2 2)) ((1 1) (2 2) (2 2)) ((2 2) (2 2) (2 2)))
 ; Finds all Permutation of the list. 
-(define (nestedList n lstx lsty len1 len2)
+(define (nestedList n lstx lsty)
   (
-   if(equal? n 1) (createTableOfList len1 len2 lstx  lsty lstx len1 '())
-     (createTableNested len1 (* len2 (expt len1 (- n 1))) lstx (nestedList (- n 1) lstx lsty len1 len2) lstx len1 '())  
+   if(equal? n 1) (createTableOfList lstx  lsty lstx '())
+     (createTableNested lstx (nestedList (- n 1) lstx lsty) lstx '())  
    )
 
   )
 
-;(trace nestedList)
+(trace nestedList)
 
 
 
@@ -184,7 +200,7 @@
   (define onlyRequiredCells (removeUnnecessaryCells myTable (caddr parameters) '()))
   (define numberOfTrees (length (caddr parameters)))
   (define numberOfOnlyRequiredCells (length onlyRequiredCells))
-  (define allCombinations (nestedList numberOfOnlyRequiredCells onlyRequiredCells onlyRequiredCells numberOfOnlyRequiredCells) )
+  (define allCombinations (nestedList (- numberOfOnlyRequiredCells 1) onlyRequiredCells onlyRequiredCells) )
 
   (newline)
   (display allCombinations)
