@@ -125,20 +125,76 @@
   )
 ;(trace removeUnnecessaryCells)
 
+
+
+
+
+
+; '((1 1) (2 2)) + '(((1 1) (1 1)) ((2 2) (1 1)) ((1 1) (2 2)) ((2 2) (2 2))) = > List which has every sublist length of 3
+(define (createTableNested x y mylst1 mylst2 absoluteList lstSize lst)  
+   (  
+    if (and (equal? x 1) (equal? y 1)) (cons (cons (car mylst1) (car mylst2)) lst)
+       (
+        
+        if(equal? x 1) (cons (cons (car mylst1) (car mylst2)) (createTableNested lstSize (- y 1) absoluteList (cdr mylst2) absoluteList lstSize lst))
+          (cons (cons (car mylst1) (car mylst2)) (createTableNested (- x 1) y (cdr mylst1) mylst2 absoluteList lstSize lst)) 
+         )
+    ) 
+ )
+;'((1 1) (2 2)) + '((1 1) (2 2)) = > '(((1 1) (1 1)) ((2 2) (1 1)) ((1 1) (2 2)) ((2 2) (2 2)))
+; Create Table With x = row , y = row , lstSize = Table Size AxA, lst is the list Of Indices
+(define (createTableOfList x y mylst1 mylst2 absoluteList lstSize lst)  
+   (  
+    if (and (equal? x 1) (equal? y 1)) (cons (cons (car mylst1) (cons (car mylst2) null)) lst)
+       (
+        
+        if(equal? x 1) (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList lstSize (- y 1) absoluteList (cdr mylst2) absoluteList lstSize lst))
+          (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList (- x 1) y (cdr mylst1) mylst2 absoluteList lstSize lst)) 
+         )
+    ) 
+ )
+
+
+;(nestedList 2 '((1 1) (2 2)) '((1 1) (2 2)) 2)
+;'(((1 1) (1 1) (1 1)) ((2 2) (1 1) (1 1)) ((1 1) (2 2) (1 1)) ((2 2) (2 2) (1 1)) ((1 1) (1 1) (2 2)) ((2 2) (1 1) (2 2)) ((1 1) (2 2) (2 2)) ((2 2) (2 2) (2 2)))
+; Finds all Permutation of the list. 
+(define (nestedList n lstx lsty len1 len2)
+  (
+   if(equal? n 1) (createTableOfList len1 len2 lstx  lsty lstx len1 '())
+     (createTableNested len1 (* len2 (expt len1 (- n 1))) lstx (nestedList (- n 1) lstx lsty len1 len2) lstx len1 '())  
+   )
+
+  )
+
+;(trace nestedList)
+
+
+
+
+
+
+
+
+
+;(define (isCellAvailable x))
+
 ; My Solver
 (define (mySolution parameters)
   (define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
   (define onlyRequiredCells (removeUnnecessaryCells myTable (caddr parameters) '()))
+  (define numberOfTrees (length (caddr parameters)))
+  (define numberOfOnlyRequiredCells (length onlyRequiredCells))
+  (define allCombinations (nestedList numberOfOnlyRequiredCells onlyRequiredCells onlyRequiredCells numberOfOnlyRequiredCells) )
 
-  
   (newline)
-  (display myTable)
-  (newline)(newline)
-  (display onlyRequiredCells)
-  (newline)
+  (display allCombinations)
+  ;(newline)
+  ;(display myTable)
+  ;(newline)(newline)
+  ;(display onlyRequiredCells)
   
  ) 
-
+ 
 ; Solver function
 (define TENTS-SOLUTION mySolution)
 

@@ -173,7 +173,17 @@
 
 
 
-
+; Create Table With x = row , y = row , lstSize = Table Size AxA, lst is the list Of Indices With Lists  = (((1 1) (1 1)) ((2 2) (1 1)) ((3 3) (1 1)) ((1 1) (2 2)) ((2 2) (2 2)) ((3 3) (2 2)) ((1 1) (3 3)) ((2 2) (3 3)) ((3 3) (3 3)))
+(define (createTable x y mylst1 mylst2 absoluteList lstSize lst)  
+   (  
+    if (and (equal? x 1) (equal? y 1)) (cons (cons (car mylst1) (cons (car mylst2) null)) lst)
+       (
+        
+        if(equal? x 1) (cons (cons (car mylst1) (cons (car mylst2) null)) (createTable lstSize (- y 1) absoluteList (cdr mylst2) absoluteList lstSize lst))
+          (cons (cons (car mylst1) (cons (car mylst2) null)) (createTable (- x 1) y (cdr mylst1) mylst2 absoluteList lstSize lst)) 
+         )
+    ) 
+ )
 
 
 
