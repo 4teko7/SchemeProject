@@ -26,7 +26,7 @@
 (define (makePair x y)
   (cons x (cons y null))
   )
-
+(define (deleteAllOccurences item list) (filter (lambda (x) (not (equal? x item))) list))
 
 ; Check If list a is in list b
 (define (isRemainsSubset a b)
@@ -102,11 +102,11 @@
 
 
 ;Return list of all neighbors which are not null
-(define (myNeighborsListFunctionForSolution x absLst)
+(define (myNeighborsListFunctionForSolution x absLst xCor yCor)
   (define x1  (if (< (- (car x) 1 ) 1) null (if (member (cons (- (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (- (car x) 1 ) (cons (cadr x) null) ) )   ))
-  (define x2  (if (> (+ (car x) 1 ) 4) null (if (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
+  (define x2  (if (> (+ (car x) 1 ) xCor) null (if (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
   (define x3  (if (< (- (cadr x) 1 ) 1) null (if (member (cons (car x) (cons (- (cadr x) 1 ) null) ) absLst ) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  ))
-  (define x4  (if (> (+ (cadr x) 1 ) 4) null (if (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
+  (define x4  (if (> (+ (cadr x) 1 ) yCor) null (if (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
   (define lst null)
   (define lst1 (if (not (null? x1)) (cons x1 lst) lst))
   (define lst2 (if (not (null? x2)) (cons x2 lst1) lst1))
@@ -115,8 +115,7 @@
  (if (null? lst4) '() lst4)
  )
 
-
-
+;(trace myNeighborsListFunctionForSolution)
 
 ; Check x is adjacent with any element in the list
 (define (myAdjacentWithListFunction x y)
@@ -257,19 +256,19 @@
 
 
 
-(define (sendEveryElementListOfList lst absLst)
-  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst) absLst) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) absLst) null) null ) ) )
-  (cons (myNeighborsListFunctionForSolution (car lst) absLst)  x)
+(define (sendEveryElementListOfList lst absLst xCor yCor)
+  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst) absLst xCor yCor) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) absLst xCor yCor) null) null ) ) )
+  (cons (myNeighborsListFunctionForSolution (car lst) absLst xCor yCor)  x)
   )
 
 ;Send Every List inside a list to combination function
 (define (sendEveryElementListOfListToCombinationFunction lst)
   (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
-  (display " lst And Length : ")(newline)(newline)
-  (display (length lst))
-  (display (car lst))(newline)(newline)
-  (display " x : ")
-  (display x)(newline)(newline)
+  ;(display " lst And Length : ")(newline)(newline)
+  ;(display (length lst))
+  ;(display (car lst))(newline)(newline)
+  ;(display " x : ")
+  ;(display x)(newline)(newline)
   (if (not (equal? 2 (length lst))) (createTableNested  (car lst) x (car lst) '())  x)
    
   )
@@ -290,11 +289,14 @@
 (define (mySolution parameters)
 
   
-  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
+  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters))))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
   (newline)(newline)
-  
-  (display onlyRequiredCells)(newline)(newline)
-  (define mathedTable (sendEveryElementListOfListToCombinationFunction onlyRequiredCells))
+  (display onlyRequiredCells)
+  (define filteredonlyRequiredCells (deleteAllOccurences null onlyRequiredCells))
+  ;(newline)(newline)
+  ;(display filteredonlyRequiredCells) (newline)(newline)
+  ;(display onlyRequiredCells)(newline)(newline)
+  (define mathedTable (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells))
   (newline)(newline)
   (display mathedTable)(newline)(newline)
   
@@ -318,7 +320,9 @@
   ;(display combinedTable2)
   
   
- ) 
+ )
+
+
  
 ; Solver function
 (define TENTS-SOLUTION mySolution)
