@@ -174,10 +174,12 @@
 ;(nestedList 2 '((1 1) (2 2)) '((1 1) (2 2)) 2)
 ;'(((1 1) (1 1) (1 1)) ((2 2) (1 1) (1 1)) ((1 1) (2 2) (1 1)) ((2 2) (2 2) (1 1)) ((1 1) (1 1) (2 2)) ((2 2) (1 1) (2 2)) ((1 1) (2 2) (2 2)) ((2 2) (2 2) (2 2)))
 ; Finds all Permutation of the list. 
-(define (nestedList n lstx lsty)
-  (
-   if(equal? n 1) (createTableOfList lstx  lsty lstx '())
-     (createTableNested lstx (nestedList (- n 1) lstx lsty) lstx '())  
+(define (nestedList n lst)
+  (cond [(equal? n 0) null]
+        [(equal? n 1) lst]
+        [(> n (length lst)) null]
+        [(equal? n 2) (createTableOfList lst  lst lst '())]
+        [else (createTableNested lst (nestedList (- n 1) lst) lst '()) ]
    )
 
   )
@@ -199,8 +201,8 @@
   (define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
   (define onlyRequiredCells (removeUnnecessaryCells myTable (caddr parameters) '()))
   (define numberOfTrees (length (caddr parameters)))
-  (define numberOfOnlyRequiredCells (length onlyRequiredCells))
-  (define allCombinations (nestedList (- numberOfOnlyRequiredCells 1) onlyRequiredCells onlyRequiredCells) )
+  (define allCombinations (nestedList numberOfTrees onlyRequiredCells) )
+  ;(define numberOfOnlyRequiredCells (length onlyRequiredCells))
 
   (newline)
   (display allCombinations)
