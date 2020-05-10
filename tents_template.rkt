@@ -6,15 +6,6 @@
 (require racket/trace)
 
 
-
-
-;(((3 3) (2 3)) ((3 3) (1 3)) ((2 3) (1 3)) ((3 3) (4 2)) ((2 3) (4 2)) ((1 3) (4 2)) ((3 3) (3 2)) ((2 3) (3 2)) ((1 3) (3 2)) ((4 2) (3 2)) ((3 3) (1 2)) ((2 3) (1 2)) ((1 3) (1 2)) ((4 2) (1 2)) ((3 2) (1 2)) ((3 3) (4 1)) ((2 3) (4 1)) ((1 3) (4 1)) ((4 2) (4 1)) ((3 2) (4 1)) ((1 2) (4 1)) ((3 3) (2 1)) ((2 3) (2 1)) ((1 3) (2 1)) ((4 2) (2 1)) ((3 2) (2 1)) ((1 2) (2 1)) ((4 1) (2 1)) ((3 3) (1 1)) ((2 3) (1 1)) ((1 3) (1 1)) ((4 2) (1 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((4 1) (1 1)) ((2 1) (1 1)))
-;(((3 3) (2 3)) ((3 3) (1 3)) ((2 3) (1 3)) ((3 3) (4 2)) ((2 3) (4 2)) ((1 3) (4 2)) ((3 3) (3 2)) ((2 3) (3 2)) ((1 3) (3 2)) ((4 2) (3 2)) ((3 3) (1 2)) ((2 3) (1 2)) ((1 3) (1 2)) ((4 2) (1 2)) ((3 2) (1 2)) ((3 3) (4 1)) ((2 3) (4 1)) ((1 3) (4 1)) ((4 2) (4 1)) ((3 2) (4 1)) ((1 2) (4 1)) ((3 3) (2 1)) ((2 3) (2 1)) ((1 3) (2 1)) ((4 2) (2 1)) ((3 2) (2 1)) ((1 2) (2 1)) ((4 1) (2 1)) ((3 3) (1 1)) ((2 3) (1 1)) ((1 3) (1 1)) ((4 2) (1 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((4 1) (1 1)) ((2 1) (1 1)))
-;(((3 3) (2 3)) ((3 3) (1 3)) ((2 3) (1 3)) ((3 3) (4 2)) ((2 3) (4 2)) ((1 3) (4 2)) ((3 3) (3 2)) ((2 3) (3 2)) ((1 3) (3 2)) ((4 2) (3 2)) ((3 3) (1 2)) ((2 3) (1 2)) ((1 3) (1 2)) ((4 2) (1 2)) ((3 2) (1 2)) ((3 3) (4 1)) ((2 3) (4 1)) ((1 3) (4 1)) ((4 2) (4 1)) ((3 2) (4 1)) ((1 2) (4 1)) ((3 3) (2 1)) ((2 3) (2 1)) ((1 3) (2 1)) ((4 2) (2 1)) ((3 2) (2 1)) ((1 2) (2 1)) ((4 1) (2 1)) ((3 3) (1 1)) ((2 3) (1 1)) ((1 3) (1 1)) ((4 2) (1 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((4 1) (1 1)) ((2 1) (1 1)))
-
-;(((3 2) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1)))
-;(((3 2) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1)))
-;(((3 2) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1)))
 ; ABS FUNCTION
 (define (abs x)
   (
@@ -26,7 +17,17 @@
 (define (makePair x y)
   (cons x (cons y null))
   )
+
+; delete all occurences of an element from the list
 (define (deleteAllOccurences item list) (filter (lambda (x) (not (equal? x item))) list))
+
+; nth element of a list
+(define (nth n l)
+  (if (or (> n (length l)) (< n 0))
+    (error "Index out of bounds.")
+    (if (eq? n 1)
+      (car l)
+      (nth (- n 1) (cdr l)))))
 
 ; Check If list a is in list b
 (define (isRemainsSubset a b)
@@ -66,9 +67,6 @@
          (cons (car l) (removeDuplicates (cdr l))))))
 
 ;(trace removeDuplicates)
-;(removeDuplicates '( ((2 1) (3 2)) ((3 2) (2 1)) ) )
-;(removeDuplicates '(((1 2) (2 1)) ((1 1) (2 1))))
-;(removeDuplicates '(((1 2) (3 2)) ((2 1) (3 2)) ((1 1) (3 2)) ((3 2) (1 2)) ((1 1) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((1 1) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1))))
 
 
 ; RETURN FIRST NOT FALSE ELEMENT WITH FUNCTIONS APPLIED
@@ -102,11 +100,11 @@
 
 
 ;Return list of all neighbors which are not null
-(define (myNeighborsListFunctionForSolution x absLst xCor yCor)
-  (define x1  (if (< (- (car x) 1 ) 1) null (if (member (cons (- (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (- (car x) 1 ) (cons (cadr x) null) ) )   ))
-  (define x2  (if (> (+ (car x) 1 ) xCor) null (if (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
-  (define x3  (if (< (- (cadr x) 1 ) 1) null (if (member (cons (car x) (cons (- (cadr x) 1 ) null) ) absLst ) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  ))
-  (define x4  (if (> (+ (cadr x) 1 ) yCor) null (if (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
+(define (myNeighborsListFunctionForSolution x absLst xCor yCor rows columns)
+  (define x1  (if (< (- (car x) 1 ) 1) null (if (or (member (cons (- (car x) 1 ) (cons (cadr x) null) ) absLst )      (not (< 0 (nth (- (car x) 1 ) rows))) (not (< 0 (nth (cadr x)  columns))) ) null  (cons (- (car x) 1 ) (cons (cadr x) null) ) )   ) )
+  (define x2  (if (> (+ (car x) 1 ) xCor) null (if (or (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst )   (not (< 0 (nth (+ (car x) 1 ) rows))) (not (< 0 (nth (cadr x)  columns))) ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
+  (define x3  (if (< (- (cadr x) 1 ) 1) null (if (or (member (cons (car x) (cons (- (cadr x) 1 ) null) ) absLst )     (not (< 0 (nth (- (cadr x) 1 ) columns))) (not (< 0 (nth (car x)  rows))) ) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  ))
+  (define x4  (if (> (+ (cadr x) 1 ) yCor) null (if (or (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst )  (not (< 0 (nth (+ (cadr x) 1 ) columns))) (not (< 0 (nth (car x)  rows))) ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
   (define lst null)
   (define lst1 (if (not (null? x1)) (cons x1 lst) lst))
   (define lst2 (if (not (null? x2)) (cons x2 lst1) lst1))
@@ -256,68 +254,36 @@
 
 
 
-(define (sendEveryElementListOfList lst absLst xCor yCor)
-  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst) absLst xCor yCor) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) absLst xCor yCor) null) null ) ) )
-  (cons (myNeighborsListFunctionForSolution (car lst) absLst xCor yCor)  x)
+(define (sendEveryElementListOfList lst absLst xCor yCor rows columns)
+  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst) absLst xCor yCor rows columns) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) absLst xCor yCor rows columns) null) null ) ) )
+  (cons (myNeighborsListFunctionForSolution (car lst) absLst xCor yCor rows columns)  x)
   )
 
 ;Send Every List inside a list to combination function
 (define (sendEveryElementListOfListToCombinationFunction lst)
   (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
-  ;(display " lst And Length : ")(newline)(newline)
-  ;(display (length lst))
-  ;(display (car lst))(newline)(newline)
-  ;(display " x : ")
-  ;(display x)(newline)(newline)
+
   (if (not (equal? 2 (length lst))) (createTableNested  (car lst) x (car lst) '())  x)
    
   )
 ;(trace sendEveryElementListOfListToCombinationFunction)
 
-
-;Send Every List inside a list to combination function
-;(define (sendEveryElementListOfListToCombinationFunction lst)
-;  (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (cons (createTableOfList (car (cadr lst)) (cadr (cadr lst)) (car (cadr lst)) '()) null) null ) ) )
-;  (cons (createTableOfList (car (car lst)) (cadr (car lst)) (car (cadr lst)) '())  x)
-;  )
-
-
-
-;(define (isCellAvailable x))
-
 ; My Solver
 (define (mySolution parameters)
 
   
-  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters))))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
+  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters)) (car parameters) (cadr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
   (newline)(newline)
   (display onlyRequiredCells)
   (define filteredonlyRequiredCells (deleteAllOccurences null onlyRequiredCells))
-  ;(newline)(newline)
-  ;(display filteredonlyRequiredCells) (newline)(newline)
+  (newline)(newline)
+  (display filteredonlyRequiredCells) (newline)(newline)
   ;(display onlyRequiredCells)(newline)(newline)
-  (define mathedTable (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells))
+  (define mathedTable (if (< 0 (length filteredonlyRequiredCells)) (if (equal? (length filteredonlyRequiredCells) 1) (car filteredonlyRequiredCells) (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells) ) #f))
   (newline)(newline)
   (display mathedTable)(newline)(newline)
-  
-  ;(define createdTable (createTableOfList onlyRequiredCells onlyRequiredCells onlyRequiredCells '())) ; '((1 2) (2 1) (3 3)) + '((1 1) (2 2))  => (((1 2) (1 1)) ((2 1) (1 1)) ((3 3) (1 1)) ((1 2) (2 2)) ((2 1) (2 2)))
-  ;(newline)(newline)
-  ;(display createdTable)
-  ;(define combinedTable (sendEveryElementListOfListToCombinationFunction createdTable))
-  ;(newline)(newline)
-  ;(display combinedTable)
 
  ; (define numberOfTrees (length (caddr parameters)))
-  ;(define allCombinations (nestedList numberOfTrees combinedTable) )
-  ;(define numberOfOnlyRequiredCells (length onlyRequiredCells))
-
- 
-  ;(newline)(newline)
-  ;(display allCombinations)
-  
-  
-  ;(newline)(newline)
-  ;(display combinedTable2)
   
   
  )
@@ -326,11 +292,6 @@
  
 ; Solver function
 (define TENTS-SOLUTION mySolution)
-
-
-;(define table '((1 2) (2 3) (3 4)))
-
-;(define lastList (removeElementFromList table '(2 3)))
 
 
 ; Helper functions
@@ -347,3 +308,10 @@
 
 
 
+
+
+  ;(display " lst And Length : ")(newline)(newline)
+  ;(display (length lst))
+  ;(display (car lst))(newline)(newline)
+  ;(display " x : ")
+  ;(display x)(newline)(newline)
