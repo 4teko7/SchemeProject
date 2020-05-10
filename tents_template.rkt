@@ -199,14 +199,14 @@
   (define x (length mylst1))
   (define y (length mylst2))
    (  
-       cond [(and (equal? x 1) (equal? y 1) (not (member (car mylst1) (car mylst2)))) (cons (cons (car mylst1) (car mylst2)) lst)]
+       cond [(and (equal? x 1) (equal? y 1) (not (member (car mylst1) (car mylst2))) (not (myAdjacentWithListFunction (car mylst1) (car mylst2) ) ) ) (cons (cons (car mylst1) (car mylst2)) lst)]
             [(and (equal? x 1) (equal? y 1) ) null]
 
             [else (
         
-        cond [(and (equal? x 1) (not (member (car mylst1) (car mylst2))))  (cons (cons (car mylst1) (car mylst2)) (createTableNested absoluteList (cdr mylst2) absoluteList lst))]
+        cond [(and (equal? x 1) (not (member (car mylst1) (car mylst2))) (not (myAdjacentWithListFunction (car mylst1) (car mylst2) ) ))  (cons (cons (car mylst1) (car mylst2)) (createTableNested absoluteList (cdr mylst2) absoluteList lst))]
              [(equal? x 1) (createTableNested absoluteList (cdr mylst2) absoluteList lst)]
-             [(not (member (car mylst1) (car mylst2))) (cons (cons (car mylst1) (car mylst2)) (createTableNested (cdr mylst1) mylst2 absoluteList lst))]
+             [(and (not (member (car mylst1) (car mylst2))) (not (myAdjacentWithListFunction (car mylst1) (car mylst2) ) ) ) (cons (cons (car mylst1) (car mylst2)) (createTableNested (cdr mylst1) mylst2 absoluteList lst))]
              [else  (createTableNested (cdr mylst1) mylst2 absoluteList lst)]
 
              
@@ -222,13 +222,13 @@
   (define x (length mylst1))
   (define y (length mylst2))
    (  
-       cond [(and (equal? x 1) (equal? y 1) (not (equal? (car mylst1) (car mylst2)))) (cons (cons (car mylst1) (cons (car mylst2) null)) lst)]
+       cond [(and (equal? x 1) (equal? y 1) (not (equal? (car mylst1) (car mylst2))) (not (myAdjacentFunction (car mylst1) (car mylst2) ) ) ) (cons (cons (car mylst1) (cons (car mylst2) null)) lst)]
             [(and (equal? x 1) (equal? y 1) ) null]
        [else (
         
-        cond [(and (equal? x 1) (not (equal? (car mylst1) (car mylst2))))  (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList absoluteList (cdr mylst2) absoluteList lst))]
+        cond [(and (equal? x 1) (not (equal? (car mylst1) (car mylst2))) (not (myAdjacentFunction (car mylst1) (car mylst2) ) ))  (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList absoluteList (cdr mylst2) absoluteList lst))]
              [(equal? x 1) (createTableOfList absoluteList (cdr mylst2) absoluteList lst)]
-             [(not (equal? (car mylst1) (car mylst2))) (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList (cdr mylst1) mylst2 absoluteList lst))]
+             [( and (not (equal? (car mylst1) (car mylst2))) (not (myAdjacentFunction (car mylst1) (car mylst2) ) ) ) (cons (cons (car mylst1) (cons (car mylst2) null)) (createTableOfList (cdr mylst1) mylst2 absoluteList lst))]
              [else  (createTableOfList (cdr mylst1) mylst2 absoluteList lst)]
          )]
     ) 
