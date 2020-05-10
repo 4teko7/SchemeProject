@@ -8,10 +8,13 @@
 
 
 
+;(((3 3) (2 3)) ((3 3) (1 3)) ((2 3) (1 3)) ((3 3) (4 2)) ((2 3) (4 2)) ((1 3) (4 2)) ((3 3) (3 2)) ((2 3) (3 2)) ((1 3) (3 2)) ((4 2) (3 2)) ((3 3) (1 2)) ((2 3) (1 2)) ((1 3) (1 2)) ((4 2) (1 2)) ((3 2) (1 2)) ((3 3) (4 1)) ((2 3) (4 1)) ((1 3) (4 1)) ((4 2) (4 1)) ((3 2) (4 1)) ((1 2) (4 1)) ((3 3) (2 1)) ((2 3) (2 1)) ((1 3) (2 1)) ((4 2) (2 1)) ((3 2) (2 1)) ((1 2) (2 1)) ((4 1) (2 1)) ((3 3) (1 1)) ((2 3) (1 1)) ((1 3) (1 1)) ((4 2) (1 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((4 1) (1 1)) ((2 1) (1 1)))
+;(((3 3) (2 3)) ((3 3) (1 3)) ((2 3) (1 3)) ((3 3) (4 2)) ((2 3) (4 2)) ((1 3) (4 2)) ((3 3) (3 2)) ((2 3) (3 2)) ((1 3) (3 2)) ((4 2) (3 2)) ((3 3) (1 2)) ((2 3) (1 2)) ((1 3) (1 2)) ((4 2) (1 2)) ((3 2) (1 2)) ((3 3) (4 1)) ((2 3) (4 1)) ((1 3) (4 1)) ((4 2) (4 1)) ((3 2) (4 1)) ((1 2) (4 1)) ((3 3) (2 1)) ((2 3) (2 1)) ((1 3) (2 1)) ((4 2) (2 1)) ((3 2) (2 1)) ((1 2) (2 1)) ((4 1) (2 1)) ((3 3) (1 1)) ((2 3) (1 1)) ((1 3) (1 1)) ((4 2) (1 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((4 1) (1 1)) ((2 1) (1 1)))
+;(((3 3) (2 3)) ((3 3) (1 3)) ((2 3) (1 3)) ((3 3) (4 2)) ((2 3) (4 2)) ((1 3) (4 2)) ((3 3) (3 2)) ((2 3) (3 2)) ((1 3) (3 2)) ((4 2) (3 2)) ((3 3) (1 2)) ((2 3) (1 2)) ((1 3) (1 2)) ((4 2) (1 2)) ((3 2) (1 2)) ((3 3) (4 1)) ((2 3) (4 1)) ((1 3) (4 1)) ((4 2) (4 1)) ((3 2) (4 1)) ((1 2) (4 1)) ((3 3) (2 1)) ((2 3) (2 1)) ((1 3) (2 1)) ((4 2) (2 1)) ((3 2) (2 1)) ((1 2) (2 1)) ((4 1) (2 1)) ((3 3) (1 1)) ((2 3) (1 1)) ((1 3) (1 1)) ((4 2) (1 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((4 1) (1 1)) ((2 1) (1 1)))
 
-
-
-
+;(((3 2) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1)))
+;(((3 2) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1)))
+;(((3 2) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1)))
 ; ABS FUNCTION
 (define (abs x)
   (
@@ -25,12 +28,15 @@
   )
 
 
-
+; Check If list a is in list b
+(define (isRemainsSubset a b)
+  (and ( not (null? b)) ( or (and (equal? (car (car a)) (car (car b))) (equal? (cadr (car a)) (cadr (car b)))) (isRemainsSubset a (cdr b ) )   )) 
+  )
 
 ;Second Function Of isSetsEqual
 (define (isSubset a b bOriginal)
   (or (null? a) 
-      (and ( not (null? b)) ( or (and (equal? (car (car a)) (car (car b))) (equal? (cadr (car a)) (cadr (car b)))) (isSubset a (cdr b ) bOriginal)   ) 
+      (and ( not (null? b)) ( or (and (equal? (car (car a)) (car (car b))) (equal? (cadr (car a)) (cadr (car b)))) (isRemainsSubset a (cdr b ))   ) 
            (isSubset (cdr a) bOriginal bOriginal )))
 
   )
@@ -42,7 +48,8 @@
                                    
   (if (isSetsEqual a (cdr b) ) #t
      (and (isSubset a (car b) (car b))
-       (isSubset (car b) a a))
+       ;(isSubset (car b) a a)
+       )
   )
   )
 )
@@ -92,6 +99,24 @@
   (cons (cons (car x) (cons (- (cadr x) 1 ) null) )
   (cons (cons (car x) (cons (+ (cadr x) 1 ) null) ) null) ) ) )
  )
+
+
+;Return list of all neighbors which are not null
+(define (myNeighborsListFunctionForSolution x)
+  (define x1  (if (< (- (car x) 1 ) 1) null (cons (- (car x) 1 ) (cons (cadr x) null) ) )   )
+  (define x2  (if (> (+ (car x) 1 ) 4) null (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   )
+  (define x3  (if (< (- (cadr x) 1 ) 1) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  )
+  (define x4  (if (> (+ (cadr x) 1 ) 4) null (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  )
+  (define lst null)
+  (define lst1 (if (not (null? x1)) (cons x1 lst) lst))
+  (define lst2 (if (not (null? x2)) (cons x2 lst1) lst1))
+  (define lst3 (if (not (null? x3)) (cons x3 lst2) lst2))
+  (define lst4 (if (not (null? x4)) (cons x4 lst3) lst3))
+ (if (null? lst4) '() lst4)
+ )
+
+
+
 
 ; Check x is adjacent with any element in the list
 (define (myAdjacentWithListFunction x y)
@@ -229,6 +254,15 @@
 
 
 
+(define (sendEveryElementListOfList lst)
+  
+  
+     
+  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst)) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) ) null) null ) ) )
+  (cons (myNeighborsListFunctionForSolution (car lst) )  x)
+
+
+  )
 
 
 
@@ -238,18 +272,20 @@
 
 ; My Solver
 (define (mySolution parameters)
-  (define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
-  (define onlyRequiredCells (removeUnnecessaryCells myTable (caddr parameters) '()))
-  (define numberOfTrees (length (caddr parameters)))
-  (define allCombinations (nestedList numberOfTrees onlyRequiredCells) )
-  ;(define numberOfOnlyRequiredCells (length onlyRequiredCells))
 
-  (newline)
-  (display allCombinations)
+  ;(define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
+  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters)))
+  
+  ;(define numberOfTrees (length (caddr parameters)))
+  ;(define allCombinations (nestedList numberOfTrees onlyRequiredCells) )
+  (define numberOfOnlyRequiredCells (length onlyRequiredCells))
+
+  ;(newline)
+  ;(display allCombinations)
   ;(newline)
   ;(display myTable)
-  ;(newline)(newline)
-  ;(display onlyRequiredCells)
+  (newline)(newline)
+  (display onlyRequiredCells)
   
  ) 
  
