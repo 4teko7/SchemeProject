@@ -212,7 +212,8 @@
             
     ) 
  )
-
+(trace createTableNested)
+ 
 
 ;'((1 1) (2 2)) + '((1 1) (2 2)) = > '(((1 1) (1 1)) ((2 2) (1 1)) ((1 1) (2 2)) ((2 2) (2 2)))
 ; Create Table With x = row , y = row , lstSize = Table Size AxA, lst is the list Of Indices
@@ -231,7 +232,7 @@
          )]
     ) 
  )
-
+;(trace createTableOfList)
 
 
 
@@ -263,9 +264,10 @@
 (define (sendEveryElementListOfListToCombinationFunction lst)
   (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
 
-  (if (not (equal? 2 (length lst))) (createTableNested  (car lst) x (car lst) '())  x)
+  (if (and (not (equal? 2 (length lst))) (not (equal? x null))) (createTableNested  (car lst) x (car lst) '())  x)
    
   )
+;(trace sendEveryElementListOfListToCombinationFunction)
 ;(trace sendEveryElementListOfListToCombinationFunction)
 
 ; My Solver
@@ -306,7 +308,7 @@
 (define REPLACE-NTH myReplaceWithNFunction)
 
 
-
+(TENTS-SOLUTION '((2 0 1 0 1 1 1 1) (1 1 0 1 1 1 1 1) ((1 6) (2 1) (2 4) (3 1) (4 5) (4 7) (5 5) (5 7) (6 2) (6 3) (7 5) (8 6) (8 8) (1 1) (2 2)) ))
 
 
 
