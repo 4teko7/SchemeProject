@@ -102,11 +102,11 @@
 
 
 ;Return list of all neighbors which are not null
-(define (myNeighborsListFunctionForSolution x)
-  (define x1  (if (< (- (car x) 1 ) 1) null (cons (- (car x) 1 ) (cons (cadr x) null) ) )   )
-  (define x2  (if (> (+ (car x) 1 ) 4) null (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   )
-  (define x3  (if (< (- (cadr x) 1 ) 1) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  )
-  (define x4  (if (> (+ (cadr x) 1 ) 4) null (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  )
+(define (myNeighborsListFunctionForSolution x absLst)
+  (define x1  (if (< (- (car x) 1 ) 1) null (if (member (cons (- (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (- (car x) 1 ) (cons (cadr x) null) ) )   ))
+  (define x2  (if (> (+ (car x) 1 ) 4) null (if (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
+  (define x3  (if (< (- (cadr x) 1 ) 1) null (if (member (cons (car x) (cons (- (cadr x) 1 ) null) ) absLst ) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  ))
+  (define x4  (if (> (+ (cadr x) 1 ) 4) null (if (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
   (define lst null)
   (define lst1 (if (not (null? x1)) (cons x1 lst) lst))
   (define lst2 (if (not (null? x2)) (cons x2 lst1) lst1))
@@ -257,9 +257,9 @@
 
 
 
-(define (sendEveryElementListOfList lst)
-  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst)) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) ) null) null ) ) )
-  (cons (myNeighborsListFunctionForSolution (car lst) )  x)
+(define (sendEveryElementListOfList lst absLst)
+  (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst) absLst) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) absLst) null) null ) ) )
+  (cons (myNeighborsListFunctionForSolution (car lst) absLst)  x)
   )
 
 ;Send Every List inside a list to combination function
@@ -290,7 +290,7 @@
 (define (mySolution parameters)
 
   
-  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
+  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
   (newline)(newline)
   
   (display onlyRequiredCells)(newline)(newline)
