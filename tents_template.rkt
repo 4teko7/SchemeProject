@@ -187,7 +187,19 @@
   )
 ;(trace removeUnnecessaryCells)
 
+;(define (calculateAndCheckForInvalidCombinationForEdgeNumbers lst xCors yCors)
 
+
+
+;)
+
+;(define (removeInvalidCombinationsForEdgeNumbers lst xCors yCors)
+
+ ; (define x (if (null? lst) null (removeUnvalidCombinationsForEdgeNumbers (cdr lst) xCors yCors)))
+ ; (cons (calculateAndCheckForInvalidCombinationForEdgeNumbers (car lst) xCors yCors) x)
+
+
+;  )
 
 
 
@@ -267,6 +279,7 @@
   (if (and (not (equal? 2 (length lst))) (not (equal? x null))) (createTableNested  (car lst) x (car lst) '())  x)
    
   )
+
 ;(trace sendEveryElementListOfListToCombinationFunction)
 ;(trace sendEveryElementListOfListToCombinationFunction)
 
@@ -291,8 +304,28 @@
  )
 
 
- 
+
+; calculate individual lists for removing invalid combinations for edge numbers 2 
+(define (calculateAndCheckForInvalidCombinationForEdgeNumbers lst xCorsAndyCors)
+  (define x (if (null? lst) xCorsAndyCors (calculateAndCheckForInvalidCombinationForEdgeNumbers (cdr lst) xCorsAndyCors)))
+  (if (not x) #f
+  (if (null? lst) x   (if  (and (< 0 (nth (car (car lst)) (car x))) (< 0 (nth (cadr (car lst)) (cadr x))) )  (cons (myReplaceWithNFunction (car x) (car (car lst)) (- (nth (car (car lst)) (car x)) 1)) (cons (myReplaceWithNFunction (cadr x) (cadr (car lst)) (- (nth (cadr (car lst)) (cadr x)) 1)) null) )  #f ) )                                    
+  )
+
+
+)
+
+; Check for edge numbers and remove invalid combinations for tents 1
+(define (removeInvalidCombinationsForEdgeNumbers lst xCorsAndyCors)
+
+  (define x (if (null? lst) null (removeInvalidCombinationsForEdgeNumbers (cdr lst) xCorsAndyCors)))
+  (if (and (not (null? lst)) (calculateAndCheckForInvalidCombinationForEdgeNumbers (car lst) xCorsAndyCors)) (cons (car lst) x) x)
+  )
+(trace removeInvalidCombinationsForEdgeNumbers)
+ ;(removeInvalidCombinationsForEdgeNumbers '(((1 1)) ((2 2) (3 3))) '((1 1 1) (1 1 1)))
 ; Solver function
+(removeInvalidCombinationsForEdgeNumbers '(((1 1) (1 1)) ((2 2) (3 3))) '((1 1 1 1) (1 1 1 1)))
+
 (define TENTS-SOLUTION mySolution)
 
 
@@ -308,7 +341,7 @@
 (define REPLACE-NTH myReplaceWithNFunction)
 
 
-(TENTS-SOLUTION '((2 0 1 0 1 1 1 1) (1 1 0 1 1 1 1 1) ((1 6) (2 1) (2 4) (3 1) (4 5) (4 7) (5 5) (5 7) (6 2) (6 3) (7 5) (8 6) (8 8) (1 1) (2 2)) ))
+;(TENTS-SOLUTION '((2 0 1 0 1 1 1 1) (1 1 0 1 1 1 1 1) ((1 6) (2 1) (2 4) (3 1) (4 5) (4 7) (5 5) (5 7) (6 2) (6 3) (7 5) (8 6) (8 8) (1 1) (2 2)) ))
 
 
 
