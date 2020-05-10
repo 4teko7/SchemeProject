@@ -24,6 +24,46 @@
   (cons x (cons y null))
   )
 
+
+
+
+;Second Function Of isSetsEqual
+(define (isSubset a b bOriginal)
+  (or (null? a) 
+      (and ( not (null? b)) ( or (and (equal? (car (car a)) (car (car b))) (equal? (cadr (car a)) (cadr (car b)))) (isSubset a (cdr b ) bOriginal)   ) 
+           (isSubset (cdr a) bOriginal bOriginal )))
+
+  )
+
+
+;Check If Two Lists Are Equal In Terms Of Element, ignore order
+(define (isSetsEqual a b)
+  (if(null? b ) #f
+                                   
+  (if (isSetsEqual a (cdr b) ) #t
+     (and (isSubset a (car b) (car b))
+       (isSubset (car b) a a))
+  )
+  )
+)
+
+;(trace isSetsEqual)
+
+; Remove Duplicate Elements
+(define (removeDuplicates l)
+  (cond ((null? l)
+         '())
+        ((isSetsEqual (car l) (cdr l))
+         (removeDuplicates (cdr l)))
+        (else
+         (cons (car l) (removeDuplicates (cdr l))))))
+
+(trace removeDuplicates)
+(removeDuplicates '( ((2 1) (3 2)) ((3 2) (2 1)) ) )
+;(removeDuplicates '(((1 2) (2 1)) ((1 1) (2 1))))
+;(removeDuplicates '(((1 2) (3 2)) ((2 1) (3 2)) ((1 1) (3 2)) ((3 2) (1 2)) ((1 1) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((1 1) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1))))
+
+
 ; RETURN FIRST NOT FALSE ELEMENT WITH FUNCTIONS APPLIED
 (define (myReturnFirstNotFalse fnc lst)
   (
@@ -178,13 +218,13 @@
   (cond [(equal? n 0) null]
         [(equal? n 1) lst]
         [(> n (length lst)) null]
-        [(equal? n 2) (createTableOfList lst  lst lst '())]
-        [else (createTableNested lst (nestedList (- n 1) lst) lst '()) ]
+        [(equal? n 2) (removeDuplicates (createTableOfList lst  lst lst '()))]
+        [else (removeDuplicates (createTableNested lst (nestedList (- n 1) lst) lst '()) )  ]
    )
 
   )
 
-(trace nestedList)
+;(trace nestedList)
 
 
 
