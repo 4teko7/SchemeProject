@@ -65,8 +65,8 @@
         (else
          (cons (car l) (removeDuplicates (cdr l))))))
 
-(trace removeDuplicates)
-(removeDuplicates '( ((2 1) (3 2)) ((3 2) (2 1)) ) )
+;(trace removeDuplicates)
+;(removeDuplicates '( ((2 1) (3 2)) ((3 2) (2 1)) ) )
 ;(removeDuplicates '(((1 2) (2 1)) ((1 1) (2 1))))
 ;(removeDuplicates '(((1 2) (3 2)) ((2 1) (3 2)) ((1 1) (3 2)) ((3 2) (1 2)) ((1 1) (1 2)) ((3 2) (2 1)) ((1 2) (2 1)) ((1 1) (2 1)) ((3 2) (1 1)) ((1 2) (1 1)) ((2 1) (1 1))))
 
@@ -236,6 +236,9 @@
  )
 
 
+
+
+
 ;(nestedList 2 '((1 1) (2 2)) '((1 1) (2 2)) 2)
 ;'(((1 1) (1 1) (1 1)) ((2 2) (1 1) (1 1)) ((1 1) (2 2) (1 1)) ((2 2) (2 2) (1 1)) ((1 1) (1 1) (2 2)) ((2 2) (1 1) (2 2)) ((1 1) (2 2) (2 2)) ((2 2) (2 2) (2 2)))
 ; Finds all Permutation of the list. 
@@ -255,16 +258,29 @@
 
 
 (define (sendEveryElementListOfList lst)
-  
-  
-     
   (define x ( if (< 2 (length lst)) (sendEveryElementListOfList  (cdr lst)) ( if (equal? 2 (length lst)) (cons (myNeighborsListFunctionForSolution (cadr lst) ) null) null ) ) )
   (cons (myNeighborsListFunctionForSolution (car lst) )  x)
-
-
   )
 
+;Send Every List inside a list to combination function
+(define (sendEveryElementListOfListToCombinationFunction lst)
+  (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
+  (display " lst And Length : ")(newline)(newline)
+  (display (length lst))
+  (display (car lst))(newline)(newline)
+  (display " x : ")
+  (display x)(newline)(newline)
+  (if (not (equal? 2 (length lst))) (createTableNested  (car lst) x (car lst) '())  x)
+   
+  )
+;(trace sendEveryElementListOfListToCombinationFunction)
 
+
+;Send Every List inside a list to combination function
+;(define (sendEveryElementListOfListToCombinationFunction lst)
+;  (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (cons (createTableOfList (car (cadr lst)) (cadr (cadr lst)) (car (cadr lst)) '()) null) null ) ) )
+;  (cons (createTableOfList (car (car lst)) (cadr (car lst)) (car (cadr lst)) '())  x)
+;  )
 
 
 
@@ -273,19 +289,34 @@
 ; My Solver
 (define (mySolution parameters)
 
-  ;(define myTable (createTable (length (car parameters)) (length (cadr parameters)) (length (car parameters)) '()))
-  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters)))
   
-  ;(define numberOfTrees (length (caddr parameters)))
-  ;(define allCombinations (nestedList numberOfTrees onlyRequiredCells) )
-  (define numberOfOnlyRequiredCells (length onlyRequiredCells))
-
-  ;(newline)
-  ;(display allCombinations)
-  ;(newline)
-  ;(display myTable)
+  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
   (newline)(newline)
-  (display onlyRequiredCells)
+  
+  (display onlyRequiredCells)(newline)(newline)
+  (define mathedTable (sendEveryElementListOfListToCombinationFunction onlyRequiredCells))
+  (newline)(newline)
+  (display mathedTable)(newline)(newline)
+  
+  ;(define createdTable (createTableOfList onlyRequiredCells onlyRequiredCells onlyRequiredCells '())) ; '((1 2) (2 1) (3 3)) + '((1 1) (2 2))  => (((1 2) (1 1)) ((2 1) (1 1)) ((3 3) (1 1)) ((1 2) (2 2)) ((2 1) (2 2)))
+  ;(newline)(newline)
+  ;(display createdTable)
+  ;(define combinedTable (sendEveryElementListOfListToCombinationFunction createdTable))
+  ;(newline)(newline)
+  ;(display combinedTable)
+
+ ; (define numberOfTrees (length (caddr parameters)))
+  ;(define allCombinations (nestedList numberOfTrees combinedTable) )
+  ;(define numberOfOnlyRequiredCells (length onlyRequiredCells))
+
+ 
+  ;(newline)(newline)
+  ;(display allCombinations)
+  
+  
+  ;(newline)(newline)
+  ;(display combinedTable2)
+  
   
  ) 
  
