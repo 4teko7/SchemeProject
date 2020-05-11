@@ -315,20 +315,20 @@
 (define (mySolution parameters)
 
   (define xCorsAndyCors (cons (car parameters) (cons (cadr parameters) null)))
-  (display xCorsAndyCors)(newline)(newline)
+  ;(display xCorsAndyCors)(newline)(newline)
   (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters)) (car parameters) (cadr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
   ;(newline)(newline)
   
   ;(display onlyRequiredCells)
   (define filteredonlyRequiredCells (deleteAllOccurences null onlyRequiredCells))
   ;(newline)(newline)
-  (display filteredonlyRequiredCells) (newline)(newline)
+  ;(display filteredonlyRequiredCells) (newline)(newline)
   ;(display onlyRequiredCells)(newline)(newline)
   (define mathedTable (if (< 0 (length filteredonlyRequiredCells)) (if (equal? (length filteredonlyRequiredCells) 1) (car filteredonlyRequiredCells) (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells xCorsAndyCors) ) #f))
-  (display mathedTable)(newline)(newline)
-  (define yyy (removeInvalidCombinationsForEdgeNumbers mathedTable xCorsAndyCors))
+  ;(display mathedTable)(newline)(newline)
+  (define lastState (removeInvalidCombinationsForEdgeNumbers mathedTable xCorsAndyCors))
   ;(define numberOfTrees (length (caddr parameters)))
-  (display yyy)(newline)(newline)
+  (display lastState)(newline)(newline)
   
  )
 
