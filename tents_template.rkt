@@ -24,10 +24,15 @@
 ; nth element of a list
 (define (nth n l)
   (if (or (> n (length l)) (< n 0))
-    (error "Index out of bounds.")
+    (error "Index Out Of Bound Exception !")
     (if (eq? n 1)
       (car l)
-      (nth (- n 1) (cdr l)))))
+      (nth (- n 1) (cdr l))))
+
+  )
+
+
+;(trace nth)
 
 ; Check If list a is in list b
 (define (isRemainsSubset a b)
@@ -185,6 +190,29 @@
  )
   
   )
+
+
+
+; calculate individual lists for removing invalid combinations for edge numbers 2 
+(define (calculateAndCheckForInvalidCombinationForEdgeNumbers lst xCorsAndyCors)
+  (define x (if (null? lst) xCorsAndyCors (calculateAndCheckForInvalidCombinationForEdgeNumbers (cdr lst) xCorsAndyCors)))
+  (if (not x) #f
+  (if (null? lst) x   (if  (and (< 0 (nth (car (car lst)) (car x))) (< 0 (nth (cadr (car lst)) (cadr x))) )  (cons (myReplaceWithNFunction (car x) (car (car lst)) (- (nth (car (car lst)) (car x)) 1)) (cons (myReplaceWithNFunction (cadr x) (cadr (car lst)) (- (nth (cadr (car lst)) (cadr x)) 1)) null) )  #f ) )                                    
+  )
+
+
+)
+
+; Check for edge numbers and remove invalid combinations for tents 1
+(define (removeInvalidCombinationsForEdgeNumbers lst xCorsAndyCors)
+
+  (define x (if (null? lst) null (removeInvalidCombinationsForEdgeNumbers (cdr lst) xCorsAndyCors)))
+  (if (and (not (null? lst)) (calculateAndCheckForInvalidCombinationForEdgeNumbers (car lst) xCorsAndyCors)) (cons (car lst) x) x)
+  )
+
+
+
+
 ;(trace removeUnnecessaryCells)
 
 ;(define (calculateAndCheckForInvalidCombinationForEdgeNumbers lst xCors yCors)
@@ -224,7 +252,7 @@
             
     ) 
  )
-(trace createTableNested)
+;(trace createTableNested)
  
 
 ;'((1 1) (2 2)) + '((1 1) (2 2)) = > '(((1 1) (1 1)) ((2 2) (1 1)) ((1 1) (2 2)) ((2 2) (2 2)))
@@ -273,9 +301,9 @@
   )
 
 ;Send Every List inside a list to combination function
-(define (sendEveryElementListOfListToCombinationFunction lst)
-  (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst)) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
-
+(define (sendEveryElementListOfListToCombinationFunction lst xCorsAndyCors)
+  (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst) xCorsAndyCors) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
+  
   (if (and (not (equal? 2 (length lst))) (not (equal? x null))) (createTableNested  (car lst) x (car lst) '())  x)
    
   )
@@ -286,45 +314,30 @@
 ; My Solver
 (define (mySolution parameters)
 
-  
+  (define xCorsAndyCors (cons (car parameters) (cons (cadr parameters) null)))
+  (display xCorsAndyCors)(newline)(newline)
   (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters)) (car parameters) (cadr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
-  (newline)(newline)
-  (display onlyRequiredCells)
+  ;(newline)(newline)
+  
+  ;(display onlyRequiredCells)
   (define filteredonlyRequiredCells (deleteAllOccurences null onlyRequiredCells))
-  (newline)(newline)
+  ;(newline)(newline)
   (display filteredonlyRequiredCells) (newline)(newline)
   ;(display onlyRequiredCells)(newline)(newline)
-  (define mathedTable (if (< 0 (length filteredonlyRequiredCells)) (if (equal? (length filteredonlyRequiredCells) 1) (car filteredonlyRequiredCells) (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells) ) #f))
-  (newline)(newline)
+  (define mathedTable (if (< 0 (length filteredonlyRequiredCells)) (if (equal? (length filteredonlyRequiredCells) 1) (car filteredonlyRequiredCells) (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells xCorsAndyCors) ) #f))
   (display mathedTable)(newline)(newline)
-
- ; (define numberOfTrees (length (caddr parameters)))
-  
+  (define yyy (removeInvalidCombinationsForEdgeNumbers mathedTable xCorsAndyCors))
+  ;(define numberOfTrees (length (caddr parameters)))
+  (display yyy)(newline)(newline)
   
  )
 
 
 
-; calculate individual lists for removing invalid combinations for edge numbers 2 
-(define (calculateAndCheckForInvalidCombinationForEdgeNumbers lst xCorsAndyCors)
-  (define x (if (null? lst) xCorsAndyCors (calculateAndCheckForInvalidCombinationForEdgeNumbers (cdr lst) xCorsAndyCors)))
-  (if (not x) #f
-  (if (null? lst) x   (if  (and (< 0 (nth (car (car lst)) (car x))) (< 0 (nth (cadr (car lst)) (cadr x))) )  (cons (myReplaceWithNFunction (car x) (car (car lst)) (- (nth (car (car lst)) (car x)) 1)) (cons (myReplaceWithNFunction (cadr x) (cadr (car lst)) (- (nth (cadr (car lst)) (cadr x)) 1)) null) )  #f ) )                                    
-  )
+;(trace sendEveryElementListOfListToCombinationFunction)
 
 
-)
-
-; Check for edge numbers and remove invalid combinations for tents 1
-(define (removeInvalidCombinationsForEdgeNumbers lst xCorsAndyCors)
-
-  (define x (if (null? lst) null (removeInvalidCombinationsForEdgeNumbers (cdr lst) xCorsAndyCors)))
-  (if (and (not (null? lst)) (calculateAndCheckForInvalidCombinationForEdgeNumbers (car lst) xCorsAndyCors)) (cons (car lst) x) x)
-  )
-(trace removeInvalidCombinationsForEdgeNumbers)
- ;(removeInvalidCombinationsForEdgeNumbers '(((1 1)) ((2 2) (3 3))) '((1 1 1) (1 1 1)))
 ; Solver function
-(removeInvalidCombinationsForEdgeNumbers '(((1 1) (1 1)) ((2 2) (3 3))) '((1 1 1 1) (1 1 1 1)))
 
 (define TENTS-SOLUTION mySolution)
 
@@ -341,6 +354,7 @@
 (define REPLACE-NTH myReplaceWithNFunction)
 
 
+;(TENTS-SOLUTION '((2 0 1 0 1 1 1 1) (1 1 0 1 1 1 1 1) ((7 5) (8 6)) ))
 ;(TENTS-SOLUTION '((2 0 1 0 1 1 1 1) (1 1 0 1 1 1 1 1) ((1 6) (2 1) (2 4) (3 1) (4 5) (4 7) (5 5) (5 7) (6 2) (6 3) (7 5) (8 6) (8 8) (1 1) (2 2)) ))
 
 
