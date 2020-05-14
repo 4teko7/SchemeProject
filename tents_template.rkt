@@ -81,6 +81,16 @@
         (else
          (cons (car l) (removeDuplicates (cdr l))))))
 
+
+(define (removeDuplicatesListsInAList l)
+  (cond ((null? l)
+         '())
+        ((member (car l) (cdr l))
+         (removeDuplicatesListsInAList (cdr l)))
+        (else
+         (cons (car l) (removeDuplicatesListsInAList (cdr l))))))
+
+
 ;(trace removeDuplicates)
 
 
@@ -343,6 +353,7 @@
     [(and (null? (caddr parameters) ) (equal? (sum (car parameters)) 0)   (equal? (sum (cadr parameters)) 0) ) '()]
     [(and (null? (caddr parameters) ) (or (not (equal? (sum (car parameters)) 0))   (not (equal? (sum (cadr parameters)) 0)) ) ) #f]
     [(or (not  (equal? (sum (car parameters)) (sum (cadr parameters)))) (not (equal? (sum (cadr parameters)) (length (caddr parameters)))))  #f]
+    [(not (equal? (length (removeDuplicatesListsInAList (caddr parameters))) (length (caddr parameters)) )) #f]
     [else (checkSolution1 parameters)]
     )
 
