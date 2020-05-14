@@ -14,6 +14,16 @@
   )
   )
 
+
+; Sum Of Elements In the list
+(define (sum elemList)
+  (if
+    (null? elemList)
+    0
+    (+ (car elemList) (sum (cdr elemList)))
+  )
+)
+
 (define (makePair x y)
   (cons x (cons y null))
   )
@@ -106,10 +116,10 @@
 
 ;Return list of all neighbors which are not null
 (define (myNeighborsListFunctionForSolution x absLst xCor yCor rows columns)
-  (define x1  (if (< (- (car x) 1 ) 1) null (if (or (member (cons (- (car x) 1 ) (cons (cadr x) null) ) absLst )      (not (< 0 (nth (- (car x) 1 ) rows))) (not (< 0 (nth (cadr x)  columns))) ) null  (cons (- (car x) 1 ) (cons (cadr x) null) ) )   ) )
-  (define x2  (if (> (+ (car x) 1 ) xCor) null (if (or (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst )   (not (< 0 (nth (+ (car x) 1 ) rows))) (not (< 0 (nth (cadr x)  columns))) ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
-  (define x3  (if (< (- (cadr x) 1 ) 1) null (if (or (member (cons (car x) (cons (- (cadr x) 1 ) null) ) absLst )     (not (< 0 (nth (- (cadr x) 1 ) columns))) (not (< 0 (nth (car x)  rows))) ) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  ))
-  (define x4  (if (> (+ (cadr x) 1 ) yCor) null (if (or (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst )  (not (< 0 (nth (+ (cadr x) 1 ) columns))) (not (< 0 (nth (car x)  rows))) ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
+  (define x1  (if (or (< (- (car x) 1 ) 1)  (> (car x) xCor) (< (car x) 1) ( > (cadr x) yCor) ( < (cadr x) 1) ) null (if (or (member (cons (- (car x) 1 ) (cons (cadr x) null) ) absLst )      (not (< 0 (nth (- (car x) 1 ) rows))) (not (< 0 (nth (cadr x)  columns))) ) null  (cons (- (car x) 1 ) (cons (cadr x) null) ) )   ) )
+  (define x2  (if (or (> (+ (car x) 1 ) xCor) (< (car x) 1) (> (car x) xCor)  (> (cadr x) yCor) (< (cadr x) 1) ) null (if (or (member (cons (+ (car x) 1 ) (cons (cadr x) null) ) absLst )   (not (< 0 (nth (+ (car x) 1 ) rows))) (not (< 0 (nth (cadr x)  columns))) ) null  (cons (+ (car x) 1 ) (cons (cadr x) null) ) )   ))
+  (define x3  (if (or (< (- (cadr x) 1 ) 1) (> (car x) xCor) (< (car x) 1) (> (cadr x) yCor) (< (cadr x) 1)  )  null (if (or (member (cons (car x) (cons (- (cadr x) 1 ) null) ) absLst )     (not (< 0 (nth (- (cadr x) 1 ) columns))) (not (< 0 (nth (car x)  rows))) ) null (cons (car x) (cons (- (cadr x) 1 ) null) ) )  ))
+  (define x4  (if (or (> (+ (cadr x) 1 ) yCor) (> (car x) xCor) (< (car x) 1) (> (cadr x) yCor) (< (cadr x) 1)  ) null (if (or (member (cons (car x) (cons (+ (cadr x) 1 ) null) ) absLst )  (not (< 0 (nth (+ (cadr x) 1 ) columns))) (not (< 0 (nth (car x)  rows))) ) null  (cons (car x) (cons (+ (cadr x) 1 ) null) ) )  ))
   (define lst null)
   (define lst1 (if (not (null? x1)) (cons x1 lst) lst))
   (define lst2 (if (not (null? x2)) (cons x2 lst1) lst1))
@@ -304,38 +314,42 @@
 (define (sendEveryElementListOfListToCombinationFunction lst xCorsAndyCors)
   (define x ( if (< 2 (length lst)) (sendEveryElementListOfListToCombinationFunction  (cdr lst) xCorsAndyCors) ( if (equal? 2 (length lst)) (car (cons (createTableOfList (car lst) (cadr lst) (car lst) '()) null) ) null ) ) )
   
-  (if (and (not (equal? 2 (length lst))) (not (equal? x null))) (createTableNested  (car lst) x (car lst) '())  x)
+  (if (and (not (equal? 2 (length lst))) (not (equal? x null))) (removeInvalidCombinationsForEdgeNumbers (createTableNested  (car lst) x (car lst) '()) xCorsAndyCors)  x)
    
   )
 
 ;(trace sendEveryElementListOfListToCombinationFunction)
 ;(trace sendEveryElementListOfListToCombinationFunction)
 
+
+(define (checkSolution1 parameters)
+  
+  (define xCorsAndyCors (cons (car parameters) (cons (cadr parameters) null)))
+  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters)) (car parameters) (cadr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
+  
+  (define filteredonlyRequiredCells (if (equal? (length onlyRequiredCells) 0) #f (deleteAllOccurences null onlyRequiredCells)))
+  (define mathedTable (if (and (not (equal? filteredonlyRequiredCells #f)) (< 0 (length filteredonlyRequiredCells))  ) (if (equal? (length filteredonlyRequiredCells) 1) filteredonlyRequiredCells (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells xCorsAndyCors) ) #f))
+
+  ;( if (and (not (equal? filteredonlyRequiredCells #f)) (not (equal? mathedTable #f)) (> (length mathedTable) 0) )  (car (removeInvalidCombinationsForEdgeNumbers mathedTable xCorsAndyCors)) #f )
+  ( if (and (not (equal? filteredonlyRequiredCells #f)) (not (equal? mathedTable #f)) (> (length mathedTable) 0) )  (car mathedTable) #f )
+
+  )
+
 ; My Solver
 (define (mySolution parameters)
 
-  (define xCorsAndyCors (cons (car parameters) (cons (cadr parameters) null)))
-  ;(display xCorsAndyCors)(newline)(newline)
-  (define onlyRequiredCells (sendEveryElementListOfList (caddr parameters) (caddr parameters) (length (car parameters)) (length (cadr parameters)) (car parameters) (cadr parameters)))    ;This gives Only Neighbors of the tree :  ((1 1) (2 2))  = >  '(   ((1 2) (2 1))   ((2 3) (2 1) (3 2) (1 2))   )
-  ;(newline)(newline)
-  
-  ;(display onlyRequiredCells)
-  (define filteredonlyRequiredCells (deleteAllOccurences null onlyRequiredCells))
-  ;(newline)(newline)
-  ;(display filteredonlyRequiredCells) (newline)(newline)
-  ;(display onlyRequiredCells)(newline)(newline)
-  (define mathedTable (if (< 0 (length filteredonlyRequiredCells)) (if (equal? (length filteredonlyRequiredCells) 1) (car filteredonlyRequiredCells) (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells xCorsAndyCors) ) #f))
-  ;(display mathedTable)(newline)(newline)
-  (define lastState (removeInvalidCombinationsForEdgeNumbers mathedTable xCorsAndyCors))
-  ;(define numberOfTrees (length (caddr parameters)))
-  (display lastState)(newline)(newline)
-  
- )
+  (cond
+    [(and (null? (caddr parameters) ) (equal? (sum (car parameters)) 0)   (equal? (sum (cadr parameters)) 0) ) '()]
+    [(and (null? (caddr parameters) ) (or (not (equal? (sum (car parameters)) 0))   (not (equal? (sum (cadr parameters)) 0)) ) ) #f]
+    [(or (not  (equal? (sum (car parameters)) (sum (cadr parameters)))) (not (equal? (sum (cadr parameters)) (length (caddr parameters)))))  #f]
+    [else (checkSolution1 parameters)]
+    )
 
+  )
 
-
+;(trace removeInvalidCombinationsForEdgeNumbers)
 ;(trace sendEveryElementListOfListToCombinationFunction)
-
+;(mySolution '((0 1 0 0) (0 1 0) ((2 3)) ))
 
 ; Solver function
 
