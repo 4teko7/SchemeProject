@@ -331,9 +331,10 @@
   (define mathedTable (if (and (not (equal? filteredonlyRequiredCells #f)) (< 0 (length filteredonlyRequiredCells))  ) (if (equal? (length filteredonlyRequiredCells) 1) filteredonlyRequiredCells (sendEveryElementListOfListToCombinationFunction filteredonlyRequiredCells xCorsAndyCors) ) #f))
 
   ;( if (and (not (equal? filteredonlyRequiredCells #f)) (not (equal? mathedTable #f)) (> (length mathedTable) 0) )  (car (removeInvalidCombinationsForEdgeNumbers mathedTable xCorsAndyCors)) #f )
-  ( if (and (not (equal? filteredonlyRequiredCells #f)) (not (equal? mathedTable #f)) (> (length mathedTable) 0) )  (car mathedTable) #f )
-
+  ( if (and (not (equal? filteredonlyRequiredCells #f)) (not (equal? mathedTable #f)) (> (length mathedTable) 0) (equal? (length (car mathedTable)) (length (caddr parameters))) )  (car mathedTable) #f )
+ 
   )
+
 
 ; My Solver
 (define (mySolution parameters)
